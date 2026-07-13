@@ -29,7 +29,7 @@ $io->on('connection', function ($socket) use ($io) {
         // Authorization Gateway for Private Channels
         if ($roomType === 'private') {
             $token = $data['token'] ?? '';
-            if ($token !== 'my-super-secure-token') { // Replace with DB lookup or JWT validation
+            if ($token !== 'php-pubsub-token-2o26') { // Replace with DB lookup or JWT validation
                 $socket->emit('error_msg', 'Access denied. Invalid token.');
                 return;
             }
