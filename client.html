@@ -1,0 +1,29 @@
+<script type="module">
+    import { io } from "https://cdn.socket.io/4.8.3/socket.io.esm.min.js";
+
+    // Connect to the proxy domain over WSS/HTTPS
+    const socket = io('http://localhost:8181');
+
+    // 1. Subscribe to a Private Room
+    socket.emit('join_room', {
+        room_type: 'private',
+        room_id: 'chat-101',
+        token: 'my-super-secure-token'
+    });
+
+    // 2. Publish to the Room
+    socket.emit('publish_message', {
+        room_type: 'private',
+        room_id: 'chat-101',
+        message: 'Hello secure room!'
+    });
+
+    // 3. Listen for Incoming Broadcasts
+    socket.on('message_received', (data) => {
+        console.log("New broadcast payload:", data);
+    });
+
+    socket.on('error_msg', (err) => {
+        console.error("Server error:", err);
+    });
+</script>
