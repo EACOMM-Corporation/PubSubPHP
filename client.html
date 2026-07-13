@@ -1,29 +1,62 @@
-<script type="module">
-    import { io } from "https://cdn.socket.io/4.8.3/socket.io.esm.min.js";
+<!DOCTYPE html>
+<html lang="en">
 
-    // Connect to the proxy domain over WSS/HTTPS
-    const socket = io('https://quira.eacomm.com');
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket Broadcast Receiver</title>
+</head>
 
-    // 1. Subscribe to a Private Room
-    socket.emit('join_room', {
-        room_type: 'private',
-        room_id: 'chat-101',
-        token: 'php-pubsub-token-2o26'
-    });
+<body>
+    <h2>Live API Broadcast Monitor</h2>
+    <div id="status" style="color: gray;">Connecting...</div>
+    <ul id="messages"></ul>
 
-    // 2. Publish to the Room
-    socket.emit('publish_message', {
-        room_type: 'private',
-        room_id: 'chat-101',
-        message: 'Hello secure room!'
-    });
+    <script type="module">
+        import { io } from 'https://cdn.socket.io/4.8.3/socket.io.esm.min.js'
+        // 1. Establish connection to your Nginx proxy (or directly to http://your-ip:8080 during local testing)
+        const socket = io('https://quira.eacomm.com', {
+            path: '/socket.io'
+        });
 
-    // 3. Listen for Incoming Broadcasts
-    socket.on('message_received', (data) => {
-        console.log("New broadcast payload:", data);
-    });
+        // The room configuration we want to listen to
+        const targetRoom = {
+            room_type: 'public',
+            room_id: 'lobby-12'
+        };
 
-    socket.on('error_msg', (err) => {
-        console.error("Server error:", err);
-    });
-</script>
+        // 2. Handle successful connection handshake
+        socket.on('connect', () => {
+            document.getElementById('status').innerText = `Connected! Joining room: ${targetRoom.room_id}...`;
+            document.getElementById('status').style.color = "green";
+
+            // Tell the server we want to enter this public room to receive its streams
+            socket.emit('join_room', targetRoom);
+        });
+
+        // 3. Optional: Listen to server acknowledgments
+        socket.on('status', (msg) => {
+            console.log('Server status report:', msg);
+        });
+
+        // 4. CRITICAL: Listen for incoming broadcasts from the API
+        socket.on('message_received', (data) => {
+            console.log('Broadcast received:', data);
+
+            const li = document.createElement('li');
+            li.innerHTML = `<strong>[${data.room}] (${data.sender}):</strong> ${data.message} <em><small>${new Date(data.timestamp * 1000).toLocaleTimeString()}</small></em>`;
+            document.getElementById('messages').appendChild(li);
+        });
+
+        // Handle errors or rejections cleanly
+        socket.on('error_msg', (err) => {
+            console.error('Socket Server Error:', err);
+        });
+
+        socket.on('disconnect', () => {
+            document.getElementById('status').innerText = "Disconnected from server.";
+            document.getElementById('status').style.color = "red";
+        });
+    </script>
+</body>
+
+</html>
