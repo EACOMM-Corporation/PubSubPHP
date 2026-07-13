@@ -5,6 +5,7 @@ use PHPSocketIO\SocketIO;
 require_once __DIR__ . '/vendor/autoload.php';
 
 Worker::$logFile = __DIR__ . '/workerman.log';
+Worker::$pidFile = __DIR__ . '/workerman.pid';
 
 // Instantiate the Socket.IO server listening internally on port 8080
 $io = new SocketIO(8181);
