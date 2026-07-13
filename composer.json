@@ -1,5 +1,6 @@
 {
     "require": {
-        "workerman/phpsocket.io": "^2.3"
+        "workerman/phpsocket.io": "^2.3",
+        "workerman/channel": "^1.2"
     }
 }

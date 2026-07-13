@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cb33905f7434b97b91f6e7e13f8f7312",
+    "content-hash": "d1b855cd64c2c704a587774f5315d7ae",
     "packages": [
         {
             "name": "workerman/channel",
