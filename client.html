@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>WebSocket Broadcast Receiver</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
 </head>
 
 <body>
@@ -11,11 +12,12 @@
     <div id="status" style="color: gray;">Connecting...</div>
     <ul id="messages"></ul>
 
-    <script type="module">
-        import { io } from 'https://cdn.socket.io/4.8.3/socket.io.esm.min.js'
+    <script>
         // 1. Establish connection to your Nginx proxy (or directly to http://your-ip:8080 during local testing)
-        const socket = io('https://quira.eacomm.com', {
-            path: '/socket.io'
+        const socket = io('ws://yourdomain', {
+            path: '/socket.io',
+            transports: ['websocket'],
+            upgrade: false
         });
 
         // The room configuration we want to listen to
@@ -26,6 +28,7 @@
 
         // 2. Handle successful connection handshake
         socket.on('connect', () => {
+            console.log('Connected?');
             document.getElementById('status').innerText = `Connected! Joining room: ${targetRoom.room_id}...`;
             document.getElementById('status').style.color = "green";
 
