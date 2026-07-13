@@ -112,8 +112,8 @@ $http_api->onMessage = function ($connection, $request) {
     $body = json_decode($request->rawBody(), true) ?? [];
     
     // Routing Match for Broadcast Endpoints
-    if ($path === '/api/broadcast/public' || $path === '/api/broadcast/private') {
-        $roomType = ($path === '/api/broadcast/private') ? 'private' : 'public';
+    if ($path === '/pubsub/api/broadcast/public' || $path === '/pubsub/api/broadcast/private') {
+        $roomType = ($path === '/pubsub/api/broadcast/private') ? 'private' : 'public';
         $roomId   = $body['room_id'] ?? null;
         $message  = $body['message'] ?? null;
         

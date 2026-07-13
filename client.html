@@ -2,7 +2,7 @@
     import { io } from "https://cdn.socket.io/4.8.3/socket.io.esm.min.js";
 
     // Connect to the proxy domain over WSS/HTTPS
-    const socket = io('yourdomain');
+    const socket = io('https://quira.eacomm.com');
 
     // 1. Subscribe to a Private Room
     socket.emit('join_room', {
